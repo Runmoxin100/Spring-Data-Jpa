@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <!--
+    persistence.xml是jpa的核心配置文件
+        需要说明的是:
+            路径: 类路径下的(也就是在resource目录下的)MATE-INF目录下
+            文件的名: 必须是persistence.xml
+    -->
+
+    <!--s
+    需要配置persistence-unit这个节点
+        这个节点就是持久化单元:
+            name:持久化单元的名称.名称是可以随便填写的.
+            transaction-type:事务管理的方式
+                JTA:分布式的事务管理.当多张表分布在不同的数据库中的时候,就是需要这种分布式的事务管理.
+                RESOURCE_LOCAL:本地的事务管理.因为我们本此的操作都是在一个数据库中操作的表,所以使用本地事务管理.
+    -->
+    <persistence-unit name="myJpa" transaction-type="RESOURCE_LOCAL">
+        <!--jpa的实现方式,因为jpa提供的是各种接口和实现类,用于规范.所以需要具体的实现方式-->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!--数据库的信息配置,因为最终还是对数据库的操作,所以需要配置数据库信息.-->
+        <properties>
+            <!--
+            配置数据库的属性信息:
+                用户名:javax.persistence.jdbc.user
+                密码:javax.persistence.jdbc.password
+                url地址:javax.persistence.jdbc.url
+                驱动:javax.persistence.jdbc.driver
+            -->
+            <property name="javax.persistence.jdbc.user" value="root"/>
+            <property name="javax.persistence.jdbc.password" value="root"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql:///jpa"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <!--
+            jpa实现方(hibernate)的配置信息
+                是否显示sql   : hibernate.show_sql
+                是否自动创建表 :   hibernate.hbm2ddl.auto
+                    create: 程序运行时创建数据库表(如果表存在,就删除表然后创建)
+                    update: 程序运行时创建表(如果表存在,则不会创建)
+                        这里需要说明一下:当个是第一次执行的时候,需要使用create,但是第一次执行完成后,必须修改为update.
+                        如果还是使用create值,则每次的执行结果都是先删除了表,然后创建表再插入数据.数据只有一条,新增进原来的表中.
+                    none: 不会创建表
+            -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>
